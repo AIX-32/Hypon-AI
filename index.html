@@ -1,172 +1,344 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visionary Agent</title>
+    <script src="https://js.puter.com/v2/"></script>
+    <link rel="icon" type="image/png" href="https://imghost.net/ib/INnANDy2gXz9Lji_1742316905.png">
     <style>
-        :root {
-            --primary: #D96C6C; 
-            --primary-hover: #b86b6b; 
-            --background: linear-gradient(195deg, #191919 0%, #312F2F 100%); 
-            --surface: rgba(51, 47, 45, 0.8); 
-            --text: #FAF3E0; 
-            --text-secondary: #BBA999; 
-            --success: #68A357; 
-            --error: #D96C6C; 
-            --elevation: 0 4px 6px -1px rgba(0, 0, 0, 0.2); 
+:root {
+    --primary: #D96C6C; 
+    --primary-hover: #b86b6b; 
+    --background: linear-gradient(195deg, #191919 0%, #312F2F 100%); 
+    --surface: rgba(51, 47, 45, 0.8); 
+    --text: #FAF3E0; 
+    --text-secondary: #BBA999; 
+    --success: #68A357; 
+    --error: #D96C6C; 
+    --elevation: 0 4px 6px -1px rgba(0, 0, 0, 0.2); 
+}
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            flex-direction: column;
+            min-height: 100vh;
+            padding: 1.5rem;
             background: var(--background);
-            overflow: hidden;
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .animation-container {
-            position: absolute;
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--elevation);
+            margin-bottom: 1.5rem;
+        }
+
+        #video {
             width: 100%;
             height: 100%;
-            z-index: 0;
+            object-fit: cover;
         }
 
-        .teleport-box {
+        .video-overlay {
             position: absolute;
-            width: 200px;
-            height: 200px;
-            border: 2px solid rgb(217, 108, 108);
-            border-radius: 8px;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
-        .teleport-box.blue {
-            border-color: #FAF3E0;
+        .video-container:hover .video-overlay {
+            opacity: 1;
+            
         }
 
-        .teleport-box.full {
-            background-color: #FAF3E0;
-            outline: 3px solid #c46f6fb2;
-            outline-offset: 5px;
-            width: 100px;
-            height: 100px;
+        .controls {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        #open-btn {
+        .input-group {
             position: relative;
-            z-index: 1;
-            padding: 16px 32px;
-            font-size: 18px;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        input, button {
+            border: none;
+            border-radius: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        #question {
+            flex: 1;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            backdrop-filter: blur(8px);
+            padding-right: 3rem;
+        }
+
+        #question:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        #ask {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0.5rem 1rem;
             background: var(--primary);
             color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
             transition: all 0.4s ease;
         }
 
-        #open-btn:hover {
+        #ask:hover {
+            background: var(--primary-hover);
+            transform: translateY(-50%) scale(1.05);
+            outline: 2px solid #c46f6fb2;
+            outline-offset: 2px;
+        }
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--elevation);
+            transition: all 0.4s ease;
+        }
+
+        button:hover {
             background: var(--primary-hover);
             transform: translateY(-1px);
             outline: 2px solid #c46f6fb2;
             outline-offset: 2px;
         }
 
-        #open-btn:active {
+        button:active {
             transform: translateY(0);
+        }
+
+        button.success {
+            background: var(--success);
+        }
+
+        #response {
+            flex: 1;
+            min-height: 150px;
+            padding: 1.25rem;
+            background: var(--surface);
+            border-radius: 1rem;
+            color: var(--text-secondary);
+            backdrop-filter: blur(8px);
+            overflow-y: auto;
+            white-space: pre-wrap;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        #response::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #response::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--error);
+        }
+
+        .status-dot.active {
+            background: var(--success);
+            animation: pulse 1.5s infinite;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--text);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            button, input {
+                padding: 0.75rem 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="animation-container">
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
+    <div class="header">
+        <h1>Visionary Agent</h1>
+        <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>Offline</span>
+        </div>
     </div>
-    <button id="open-btn">Start visionary</button>
+
+    <div class="video-container">
+        <video id="video" autoplay></video>
+        <div class="video-overlay">
+            <button id="start">▶ Start Stream</button>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="input-group">
+            <input type="text" id="question" placeholder="Ask about the stream...">
+            <button id="ask">Ask</button>
+        </div>
+    </div>
+
+    <div id="response"></div>
 
     <script>
-        const boxes = document.querySelectorAll('.teleport-box');
+        const video = document.getElementById('video');
+        const startBtn = document.getElementById('start');
+        const questionInput = document.getElementById('question');
+        const askBtn = document.getElementById('ask');
+        const responseDiv = document.getElementById('response');
 
-        function getRandomPosition() {
-            return {
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight
-            };
-        }
+        let stream;
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
 
-        function moveBox(box) {
-            const newPos = getRandomPosition();
-            box.style.transition = 'none';
-            box.style.transform = `translate(${newPos.x}px, ${newPos.y}px)`;
-            box.style.opacity = Math.random() > 0.5 ? 1 : 0;
-            box.classList.toggle('blue', Math.random() > 0.5);
-            box.classList.toggle('full', Math.random() > 0.5);
-        }
-
-        function startAnimation() {
-            boxes.forEach(box => {
-                moveBox(box);
-                setInterval(() => moveBox(box), 500 + Math.random() * 1000);
-            });
-        }
-
-        startAnimation();
-
-        document.getElementById('open-btn').addEventListener('click', () => {
-            const width = 320;
-            const height = 800;
-            const left = (screen.width - width) / 2;
-            const top = (screen.height - height) / 2;
-
-            window.open('main.html', 'VisionaryAgent', 
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-            );
+        startBtn.addEventListener('click', async () => {
+            try {
+                stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+                video.srcObject = stream;
+            } catch (error) {
+                console.error('Error accessing screen:', error);
+            }   
         });
+
+        const EXTRA_CONTEXT = `This is a screen analyzer. The user is asking questions about the content of the screen. Provide detailed and accurate responses based on the visual data.`;
+
+        askBtn.addEventListener('click', async () => {
+            if (!stream) {
+                alert('Please start the stream first!');
+                return;
+            }
+
+            const question = questionInput.value;
+
+            if (!question) return;
+
+            askBtn.disabled = true;
+            responseDiv.textContent = 'Thinking...';
+
+            try {
+                // Capture frame from video
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                const imageData = canvas.toDataURL('image/jpeg');
+
+                // Send to GPT-4 Vision
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question, extraContext: EXTRA_CONTEXT, imageData }),
+                });
+
+                const data = await response.json();
+                responseDiv.textContent = data.answer;
+            } catch (error) {
+                console.error('Error analyzing stream:', error);
+                responseDiv.textContent = 'Error analyzing stream. Please try again.';
+            } finally {
+                askBtn.disabled = false;
+            }
+        });
+
+        // Add status indicator logic
+        const statusDot = document.querySelector('.status-dot');
+        const statusText = document.querySelector('.status-indicator span');
+
+        function updateStatus(connected) {
+            statusDot.classList.toggle('active', connected);
+            statusText.textContent = connected ? 'Live' : 'Offline';
+        }
     </script>
 </body>
 </html>

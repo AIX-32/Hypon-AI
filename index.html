@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta property="og:title" content="Visionary Agent" />
+        <meta property="og:description" content="A AI agent that can analyze your screen and answer questions about them." />
+        <meta property="og:image" content="https://imghost.net/ib/dCH6vUK523oiyAU_1742317151.png" />
+        <link rel="icon" type="image/png" href="https://imghost.net/ib/INnANDy2gXz9Lji_1742316905.png">
+        <meta property="og:type" content="website" />
     <title>Visionary Agent</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://js.puter.com/v2/"></script>
     <style>
         :root {
-            --primary: #D96C6C;
-            --primary-hover: #b86b6b;
+            --primary: #D96C6C; 
+            --primary-hover: #b86b6b; 
             --primary-gradient: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
-            --background: linear-gradient(195deg, #191919 0%, #312F2F 100%);
-            --surface: rgba(51, 47, 45, 0.8);
+            --background: linear-gradient(195deg, #191919 0%, #312F2F 100%); 
+            --surface: rgba(51, 47, 45, 0.8); 
             --surface-hover: rgba(61, 57, 55, 0.9);
             --glass-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --text: #FAF3E0;
-            --text-secondary: #BBA999;
-            --success: #68A357;
-            --error: #D96C6C;
-            --elevation: 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+            --text: #FAF3E0; 
+            --text-secondary: #BBA999; 
+            --success: #68A357; 
+            --error: #D96C6C; 
+            --elevation: 0 8px 16px -4px rgba(0, 0, 0, 0.3); 
             --elevation-hover: 0 12px 24px -6px rgba(0, 0, 0, 0.4);
             --transition-fast: 0.2s ease;
             --transition-normal: 0.3s ease;
@@ -44,30 +45,82 @@
             --elevation: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
             --elevation-hover: 0 12px 24px -6px rgba(0, 0, 0, 0.15);
         }
+
         body {
             margin: 0;
-            padding: 24px;
             display: flex;
-            flex-direction: column;
-            height: 100vh;
-            width: 400px;
-            box-sizing: border-box;
-            background: var(--background);
-            color: var(--text);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            letter-spacing: 0.3px;
-        }
-        
-        .header {
-            display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 20px;
+            height: 100vh;
+            background: var(--background);
+            overflow: hidden;
+        }
+
+        .animation-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .teleport-box {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid rgb(217, 108, 108);
+            border-radius: 8px;
+        }
+
+        .teleport-box.blue {
+            border-color: #FAF3E0;
+        }
+
+        .teleport-box.full {
+            background-color: #FAF3E0;
+            outline: 3px solid #c46f6fb2;
+            outline-offset: 5px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .button-container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        #open-btn {
+            padding: 16px 32px;
+            font-size: 18px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: var(--elevation);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        #open-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--elevation-hover);
+            outline: 2px solid #c46f6fb2;
+            outline-offset: 2px;
+        }
+
+        #open-btn:active {
+            transform: translateY(0);
         }
         
         #theme-toggle {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -86,9 +139,8 @@
         }
         
         #theme-toggle:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: var(--elevation-hover), 0 0 15px rgba(217, 108, 108, 0.3);
-            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--elevation-hover);
         }
         
         #theme-toggle .sun-icon,
@@ -113,152 +165,70 @@
             transform: translateY(0);
         }
         
-        .video-container {
-            position: relative;
+        .teleport-box {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--primary);
             border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-        h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin: 0 0 24px 0;
-            background: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        #video {
-            width: 100%;
-            max-height: 300px;
-            margin-bottom: 24px;
-            background: #000;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--elevation);
-            transition: box-shadow 0.3s ease;
-        }
-        #video:hover {
-            box-shadow: var(--elevation-hover), 0 0 20px rgba(0, 0, 0, 0.2);
-            transform: scale(1.02);
-        }
-        #controls {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-        .search-container {
-            position: relative;
-            width: 100%;
-        }
-        #question {
-            width: 100%;
-            padding: 14px 100px 14px 18px;
-            border: 2px solid transparent;
-            border-radius: 12px;
-            background: var(--surface);
-            color: var(--text);
-            outline: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-sizing: border-box;
-            font-size: 1rem;
-            box-shadow: var(--elevation);
-        }
-        #question:hover {
-            background: var(--surface-hover);
-            box-shadow: var(--elevation-hover), 0 0 15px rgba(217, 108, 108, 0.15);
-            transform: translateY(-1px);
-        }
-        #question:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(217, 108, 108, 0.3);
-            transform: translateY(-1px);
-        }
-        button {
-            padding: 14px 20px;
-            cursor: pointer;
-            background: var(--primary-gradient);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 1rem;
-            letter-spacing: 0.5px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--elevation);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
+            transition: transform var(--transition-slow), opacity var(--transition-normal), background-color var(--transition-normal);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
-            border: 1px solid var(--glass-border);
-        }
-        
-        button:hover {
-            background: linear-gradient(45deg, var(--primary) 0%, var(--primary-hover) 100%);
-            transform: translateY(-2px) scale(1.02);
-            box-shadow: var(--elevation-hover), 0 0 20px rgba(217, 108, 108, 0.3);
-            border-color: var(--primary);
-        }
-        
-        button:active {
-            transform: translateY(1px);
-            box-shadow: var(--elevation);
-        }
-        
-        button svg {
-            transition: transform var(--transition-fast);
-        }
-        
-        button:hover svg {
-            transform: scale(1.1);
-        }
-        #ask {
-            position: absolute;
-            right: 4px;
-            top: 50%;
-            transform: translateY(-50%);
-            height: calc(100% - 8px);
-        }
-        #response {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            background: var(--surface);
-            border-radius: 12px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            font-size: 1rem;
-            box-shadow: var(--elevation);
-            transition: all 0.3s ease;
-        }
-        #response:hover {
-            background: var(--surface-hover);
-            box-shadow: var(--elevation-hover);
-        }
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: var(--text);
-            animation: spin 1s ease-in-out infinite;
-        }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Visionary Agent</h1>
+    <div class="animation-container">
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+        <div class="teleport-box"></div>
+    </div>
+    <div class="button-container">
+        <button id="open-btn">Start visionary</button>
         <button id="theme-toggle" aria-label="Toggle theme">
-            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="5"></circle>
                 <line x1="12" y1="1" x2="12" y2="3"></line>
                 <line x1="12" y1="21" x2="12" y2="23"></line>
@@ -269,46 +239,18 @@
                 <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
                 <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
-            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
             </svg>
         </button>
     </div>
-    <div class="video-container">
-        <video id="video" autoplay></video>
-        <div class="video-overlay"></div>
-    </div>
-    <div id="controls">
-        <button id="start">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="5 3 19 12 5 21 5 3"></polygon>
-            </svg>
-            <span>Start Stream</span>
-        </button>
-        <div class="search-container">
-            <input type="text" id="question" placeholder="Ask about the screen...">
-            <button id="ask">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <span>Ask</span>
-            </button>
-        </div>
-    </div>
-    <div id="response"></div>
 
     <script>
-        // Set initial theme based on user preference or previous setting
-        const savedTheme = localStorage.getItem('visionary-theme') || 
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        
-        const video = document.getElementById('video');
-        const startBtn = document.getElementById('start');
-        const questionInput = document.getElementById('question');
-        const askBtn = document.getElementById('ask');
-        const responseDiv = document.getElementById('response');
+        // Set initial theme based on user preference
+        document.documentElement.setAttribute('data-theme', 
+            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            
+        const boxes = document.querySelectorAll('.teleport-box');
         const themeToggle = document.getElementById('theme-toggle');
 
         // Theme toggle functionality
@@ -316,7 +258,6 @@
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('visionary-theme', newTheme);
             
             // Add animation effect during theme change
             document.body.style.transition = 'background 0.5s ease';
@@ -324,49 +265,58 @@
                 document.body.style.transition = '';
             }, 500);
         });
-        
-        let stream;
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
 
-        startBtn.addEventListener('click', async () => {
-            try {
-                stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
-                video.srcObject = stream;
-            } catch (error) {
-                console.error('Error accessing screen:', error);
-            }
+        function getRandomPosition() {
+            return {
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight
+            };
+        }
+
+        function moveBox(box) {
+            const newPos = getRandomPosition();
+            box.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease';
+            box.style.transform = `translate(${newPos.x}px, ${newPos.y}px) rotate(${Math.random() * 10 - 5}deg)`;
+            box.style.opacity = Math.random() > 0.4 ? 0.7 : 0;
+            box.classList.toggle('blue', Math.random() > 0.5);
+            box.classList.toggle('full', Math.random() > 0.7);
+        }
+
+        function startAnimation() {
+            boxes.forEach((box, index) => {
+                // Stagger the initial animation
+                setTimeout(() => {
+                    moveBox(box);
+                    setInterval(() => moveBox(box), 800 + Math.random() * 1500);
+                }, index * 50);
+            });
+        }
+
+        startAnimation();
+
+        // Add hover effect to open button
+        const openBtn = document.getElementById('open-btn');
+        openBtn.addEventListener('mousemove', (e) => {
+            const rect = openBtn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            openBtn.style.background = `radial-gradient(circle at ${x}px ${y}px, var(--primary) 0%, var(--primary-hover) 80%)`;
+        });
+        
+        openBtn.addEventListener('mouseleave', () => {
+            openBtn.style.background = 'var(--primary-gradient)';
         });
 
-        askBtn.addEventListener('click', async () => {
-            if (!stream) {
-                alert('Please start the stream first!');
-                return;
-            }
+        openBtn.addEventListener('click', () => {
+            const width = 360;
+            const height = 800;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
 
-            // Show loading state
-            askBtn.innerHTML = `<div class="loading"></div>`;
-            askBtn.disabled = true;
-
-            // Capture frame from video
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            const imageData = canvas.toDataURL('image/jpeg');
-
-            // Send to GPT-4 Vision
-            const question = questionInput.value;
-            try {
-                const response = await puter.ai.chat(question, imageData);
-                responseDiv.innerText = response;
-            } catch (error) {
-                console.error('Error analyzing stream:', error);
-                responseDiv.innerText = 'Error analyzing stream. Please try again.';
-            } finally {
-                // Reset button
-                askBtn.innerHTML = 'Ask';
-                askBtn.disabled = false;
-            }
+            window.open('main.html', 'VisionaryAgent', 
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+            );
         });
     </script>
 </body>

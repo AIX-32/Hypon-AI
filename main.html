@@ -1,24 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="dark">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visionary Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://js.puter.com/v2/"></script>
     <style>
         :root {
-            --primary: #D96C6C; 
-    --primary-hover: #b86b6b; 
-    --background: linear-gradient(195deg, #191919 0%, #312F2F 100%); 
-    --surface: rgba(51, 47, 45, 0.8); 
-    --text: #FAF3E0; 
-    --text-secondary: #BBA999; 
-    --success: #68A357; 
-    --error: #D96C6C; 
-    --elevation: 0 4px 6px -1px rgba(0, 0, 0, 0.2); 
-
+            --primary: #D96C6C;
+            --primary-hover: #b86b6b;
+            --primary-gradient: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
+            --background: linear-gradient(195deg, #191919 0%, #312F2F 100%);
+            --surface: rgba(51, 47, 45, 0.8);
+            --surface-hover: rgba(61, 57, 55, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #FAF3E0;
+            --text-secondary: #BBA999;
+            --success: #68A357;
+            --error: #D96C6C;
+            --elevation: 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+            --elevation-hover: 0 12px 24px -6px rgba(0, 0, 0, 0.4);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+        
+        /* Light mode variables */
+        [data-theme="light"] {
+            --primary: #D96C6C;
+            --primary-hover: #b86b6b;
+            --primary-gradient: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
+            --background: linear-gradient(195deg, #f5f5f5 0%, #e0e0e0 100%);
+            --surface: rgba(255, 255, 255, 0.8);
+            --surface-hover: rgba(245, 245, 245, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --text: #333333;
+            --text-secondary: #666666;
+            --elevation: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
+            --elevation-hover: 0 12px 24px -6px rgba(0, 0, 0, 0.15);
         }
         body {
             margin: 0;
-            padding: 20px;
+            padding: 24px;
             display: flex;
             flex-direction: column;
             height: 100vh;
@@ -27,70 +55,190 @@
             background: var(--background);
             color: var(--text);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            letter-spacing: 0.3px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        #theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--elevation);
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #theme-toggle:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--elevation-hover), 0 0 15px rgba(217, 108, 108, 0.3);
+            border-color: var(--primary);
+        }
+        
+        #theme-toggle .sun-icon,
+        #theme-toggle .moon-icon {
+            position: absolute;
+            transition: transform var(--transition-normal);
+        }
+        
+        [data-theme="dark"] #theme-toggle .sun-icon {
+            transform: translateY(0);
+        }
+        
+        [data-theme="dark"] #theme-toggle .moon-icon {
+            transform: translateY(30px);
+        }
+        
+        [data-theme="light"] #theme-toggle .sun-icon {
+            transform: translateY(-30px);
+        }
+        
+        [data-theme="light"] #theme-toggle .moon-icon {
+            transform: translateY(0);
+        }
+        
+        .video-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 24px;
         }
         h1 {
             font-size: 1.75rem;
             font-weight: 700;
+            margin: 0 0 24px 0;
             background: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         #video {
             width: 100%;
             max-height: 300px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             background: #000;
-            border-radius: 8px;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: var(--elevation);
+            transition: box-shadow 0.3s ease;
+        }
+        #video:hover {
+            box-shadow: var(--elevation-hover), 0 0 20px rgba(0, 0, 0, 0.2);
+            transform: scale(1.02);
         }
         #controls {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 16px;
+            margin-bottom: 24px;
         }
-        button {
-            padding: 12px 20px;
-            cursor: pointer;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        button:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
-            outline: 2px solid #c46f6fb2;
-            outline-offset: 2px;
-        }
-        button:active {
-            transform: translateY(0);
+        .search-container {
+            position: relative;
+            width: 100%;
         }
         #question {
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid var(--surface);
-            border-radius: 8px;
+            width: 100%;
+            padding: 14px 100px 14px 18px;
+            border: 2px solid transparent;
+            border-radius: 12px;
             background: var(--surface);
             color: var(--text);
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
+            font-size: 1rem;
+            box-shadow: var(--elevation);
+        }
+        #question:hover {
+            background: var(--surface-hover);
+            box-shadow: var(--elevation-hover), 0 0 15px rgba(217, 108, 108, 0.15);
+            transform: translateY(-1px);
         }
         #question:focus {
-            outline: 2px solid #c46f6fb2;
-            outline-offset: 2px;
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(217, 108, 108, 0.3);
+            transform: translateY(-1px);
+        }
+        button {
+            padding: 14px 20px;
+            cursor: pointer;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--elevation);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid var(--glass-border);
+        }
+        
+        button:hover {
+            background: linear-gradient(45deg, var(--primary) 0%, var(--primary-hover) 100%);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: var(--elevation-hover), 0 0 20px rgba(217, 108, 108, 0.3);
+            border-color: var(--primary);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+            box-shadow: var(--elevation);
+        }
+        
+        button svg {
+            transition: transform var(--transition-fast);
+        }
+        
+        button:hover svg {
+            transform: scale(1.1);
+        }
+        #ask {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            height: calc(100% - 8px);
         }
         #response {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
+            padding: 20px;
             background: var(--surface);
-            border-radius: 8px;
+            border-radius: 12px;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.6;
+            font-size: 1rem;
+            box-shadow: var(--elevation);
+            transition: all 0.3s ease;
+        }
+        #response:hover {
+            background: var(--surface-hover);
+            box-shadow: var(--elevation-hover);
         }
         .loading {
             display: inline-block;
@@ -107,22 +255,76 @@
     </style>
 </head>
 <body>
-    <h1>Visionary Agent</h1>
-    <video id="video" autoplay></video>
+    <div class="header">
+        <h1>Visionary Agent</h1>
+        <button id="theme-toggle" aria-label="Toggle theme">
+            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+        </button>
+    </div>
+    <div class="video-container">
+        <video id="video" autoplay></video>
+        <div class="video-overlay"></div>
+    </div>
     <div id="controls">
-        <button id="start">Start Stream</button>
-        <input type="text" id="question" placeholder="Ask about the screen...">
-        <button id="ask">Ask</button>
+        <button id="start">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            <span>Start Stream</span>
+        </button>
+        <div class="search-container">
+            <input type="text" id="question" placeholder="Ask about the screen...">
+            <button id="ask">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span>Ask</span>
+            </button>
+        </div>
     </div>
     <div id="response"></div>
 
     <script>
+        // Set initial theme based on user preference or previous setting
+        const savedTheme = localStorage.getItem('visionary-theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
         const video = document.getElementById('video');
         const startBtn = document.getElementById('start');
         const questionInput = document.getElementById('question');
         const askBtn = document.getElementById('ask');
         const responseDiv = document.getElementById('response');
+        const themeToggle = document.getElementById('theme-toggle');
 
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('visionary-theme', newTheme);
+            
+            // Add animation effect during theme change
+            document.body.style.transition = 'background 0.5s ease';
+            setTimeout(() => {
+                document.body.style.transition = '';
+            }, 500);
+        });
+        
         let stream;
         let canvas = document.createElement('canvas');
         let ctx = canvas.getContext('2d');

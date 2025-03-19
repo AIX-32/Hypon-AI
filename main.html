@@ -63,6 +63,8 @@
         button:hover {
             background: var(--primary-hover);
             transform: translateY(-1px);
+            outline: 2px solid #c46f6fb2;
+            outline-offset: 2px;
         }
         button:active {
             transform: translateY(0);
@@ -78,7 +80,8 @@
             transition: border-color 0.2s ease;
         }
         #question:focus {
-            border-color: var(--primary);
+            outline: 2px solid #c46f6fb2;
+            outline-offset: 2px;
         }
         #response {
             flex: 1;

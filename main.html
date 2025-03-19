@@ -1,14 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visionary Agent</title>
     <script src="https://js.puter.com/v2/"></script>
-    <link rel="icon" type="image/png" href="https://imghost.net/ib/INnANDy2gXz9Lji_1742316905.png">
     <style>
-:root {
-    --primary: #D96C6C; 
+        :root {
+            --primary: #D96C6C; 
     --primary-hover: #b86b6b; 
     --background: linear-gradient(195deg, #191919 0%, #312F2F 100%); 
     --surface: rgba(51, 47, 45, 0.8); 
@@ -17,36 +14,20 @@
     --success: #68A357; 
     --error: #D96C6C; 
     --elevation: 0 4px 6px -1px rgba(0, 0, 0, 0.2); 
-}
 
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
-
         body {
+            margin: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
-            padding: 1.5rem;
+            height: 100vh;
+            width: 400px;
+            box-sizing: border-box;
             background: var(--background);
             color: var(--text);
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            max-width: 600px;
-            margin: 0 auto;
         }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
         h1 {
             font-size: 1.75rem;
             font-weight: 700;
@@ -55,161 +36,59 @@
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-
-        .video-container {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16/9;
-            background: #000;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: var(--elevation);
-            margin-bottom: 1.5rem;
-        }
-
         #video {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-height: 300px;
+            margin-bottom: 20px;
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
         }
-
-        .video-overlay {
-            position: absolute;
-            inset: 0;
+        #controls {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.8);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-
-        .video-container:hover .video-overlay {
-            opacity: 1;
-            
-        }
-
-        .controls {
-            display: grid;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .input-group {
-            position: relative;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        input, button {
-            border: none;
-            border-radius: 0.75rem;
-            padding: 0.875rem 1.25rem;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
-
-        #question {
-            flex: 1;
-            background: var(--surface);
-            color: var(--text);
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            backdrop-filter: blur(8px);
-            padding-right: 3rem;
-        }
-
-        #question:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        #ask {
-            position: absolute;
-            right: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            padding: 0.5rem 1rem;
-            background: var(--primary);
-            color: white;
-            transition: all 0.4s ease;
-        }
-
-        #ask:hover {
-            background: var(--primary-hover);
-            transform: translateY(-50%) scale(1.05);
-            outline: 2px solid #c46f6fb2;
-            outline-offset: 2px;
-        }
-
         button {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-weight: 500;
+            padding: 12px 20px;
             cursor: pointer;
             background: var(--primary);
             color: white;
-            box-shadow: var(--elevation);
-            transition: all 0.4s ease;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
-
         button:hover {
             background: var(--primary-hover);
             transform: translateY(-1px);
-            outline: 2px solid #c46f6fb2;
-            outline-offset: 2px;
         }
-
         button:active {
             transform: translateY(0);
         }
-
-        button.success {
-            background: var(--success);
+        #question {
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--surface);
+            border-radius: 8px;
+            background: var(--surface);
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s ease;
         }
-
+        #question:focus {
+            border-color: var(--primary);
+        }
         #response {
             flex: 1;
-            min-height: 150px;
-            padding: 1.25rem;
-            background: var(--surface);
-            border-radius: 1rem;
-            color: var(--text-secondary);
-            backdrop-filter: blur(8px);
             overflow-y: auto;
-            white-space: pre-wrap;
-            border: 1px solid rgba(148, 163, 184, 0.1);
-        }
-
-        #response::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #response::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+            padding: 16px;
+            background: var(--surface);
+            border-radius: 8px;
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            line-height: 1.5;
         }
-
-        .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--error);
-        }
-
-        .status-dot.active {
-            background: var(--success);
-            animation: pulse 1.5s infinite;
-        }
-
         .loading {
             display: inline-block;
             width: 20px;
@@ -219,55 +98,19 @@
             border-top-color: var(--text);
             animation: spin 1s ease-in-out infinite;
         }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 1rem;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            button, input {
-                padding: 0.75rem 1rem;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Visionary Agent</h1>
-        <div class="status-indicator">
-            <div class="status-dot"></div>
-            <span>Offline</span>
-        </div>
+    <h1>Screen Stream Analyzer</h1>
+    <video id="video" autoplay></video>
+    <div id="controls">
+        <button id="start">Start Stream</button>
+        <input type="text" id="question" placeholder="Ask about the stream...">
+        <button id="ask">Ask</button>
     </div>
-
-    <div class="video-container">
-        <video id="video" autoplay></video>
-        <div class="video-overlay">
-            <button id="start">▶ Start Stream</button>
-        </div>
-    </div>
-
-    <div class="controls">
-        <div class="input-group">
-            <input type="text" id="question" placeholder="Ask about the stream...">
-            <button id="ask">Ask</button>
-        </div>
-    </div>
-
     <div id="response"></div>
 
     <script>
@@ -287,10 +130,8 @@
                 video.srcObject = stream;
             } catch (error) {
                 console.error('Error accessing screen:', error);
-            }   
+            }
         });
-
-        const EXTRA_CONTEXT = `This is a screen analyzer. The user is asking questions about the content of the screen. Provide detailed and accurate responses based on the visual data.`;
 
         askBtn.addEventListener('click', async () => {
             if (!stream) {
@@ -298,47 +139,30 @@
                 return;
             }
 
-            const question = questionInput.value;
-
-            if (!question) return;
-
+            // Show loading state
+            askBtn.innerHTML = `<div class="loading"></div>`;
             askBtn.disabled = true;
-            responseDiv.textContent = 'Thinking...';
 
+            // Capture frame from video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvas.toDataURL('image/jpeg');
+
+            // Send to GPT-4 Vision
+            const question = questionInput.value;
             try {
-                // Capture frame from video
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-                const imageData = canvas.toDataURL('image/jpeg');
-
-                // Send to GPT-4 Vision
-                const response = await fetch('/ask', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ question, extraContext: EXTRA_CONTEXT, imageData }),
-                });
-
-                const data = await response.json();
-                responseDiv.textContent = data.answer;
+                const response = await puter.ai.chat(question, imageData);
+                responseDiv.innerText = response;
             } catch (error) {
                 console.error('Error analyzing stream:', error);
-                responseDiv.textContent = 'Error analyzing stream. Please try again.';
+                responseDiv.innerText = 'Error analyzing stream. Please try again.';
             } finally {
+                // Reset button
+                askBtn.innerHTML = 'Ask';
                 askBtn.disabled = false;
             }
         });
-
-        // Add status indicator logic
-        const statusDot = document.querySelector('.status-dot');
-        const statusText = document.querySelector('.status-indicator span');
-
-        function updateStatus(connected) {
-            statusDot.classList.toggle('active', connected);
-            statusText.textContent = connected ? 'Live' : 'Offline';
-        }
     </script>
 </body>
 </html>

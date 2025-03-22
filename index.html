@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Visionary Agent Chat</title>
+    <title>Hypon AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <meta property="og:description" content="A AI agent that can analyze your screen and answer questions about them." />
+        <meta property="og:image" content="https://imghost.net/ib/dCH6vUK523oiyAU_1742317151.png" />
+        <link rel="icon" type="image/png" href="https://imghost.net/ib/INnANDy2gXz9Lji_1742316905.png">
+        <meta property="og:type" content="website" />
     <style>
         :root {
             --primary: #D96C6C;
@@ -282,17 +285,11 @@
         <div class="chat-list" id="chatList">
         </div>
         <div class="button-container">
-            <button class="btn sidebar-btn">
-                <i class="fas fa-eye"></i>
-            </button>
-            <button class="btn sidebar-btn" id="heartBtn">
-                <i class="fas fa-heart"></i>
-            </button>
-            <button class="btn sidebar-btn" id="lightbulbBtn">
-                <i class="fas fa-lightbulb"></i>
-            </button>
+            <button class="btn sidebar-btn" id="openBtn"><i class="fas fa-eye"></i></button>
+            <button class="btn sidebar-btn" id="heartBtn"><i class="fas fa-heart"></i></button>
+            <button class="btn sidebar-btn" id="lightbulbBtn"><i class="fas fa-lightbulb"></i></button>
         </div>
-            <!-- chats will be loaded here -->
+            
         </div>
     </div>
     <div class="chat-container">
@@ -519,6 +516,18 @@ document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
                 sendBtn.click();
             }
         });
+
+        openBtn.addEventListener('click', () => {
+            const width = 360;
+            const height = 800;
+            const left = (screen.width - width) / 2;
+            const top = (screen.height - height) / 2;
+
+            window.open('main.html', 'VisionaryAgent', 
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
+            );
+        });
+
     </script>
 </body>
 </html>

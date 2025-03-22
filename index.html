@@ -1,322 +1,523 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta property="og:title" content="Visionary Agent" />
-        <meta property="og:description" content="A AI agent that can analyze your screen and answer questions about them." />
-        <meta property="og:image" content="https://imghost.net/ib/dCH6vUK523oiyAU_1742317151.png" />
-        <link rel="icon" type="image/png" href="https://imghost.net/ib/INnANDy2gXz9Lji_1742316905.png">
-        <meta property="og:type" content="website" />
-    <title>Visionary Agent</title>
+    <title>Visionary Agent Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #D96C6C; 
-            --primary-hover: #b86b6b; 
-            --primary-gradient: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
-            --background: linear-gradient(195deg, #191919 0%, #312F2F 100%); 
-            --surface: rgba(51, 47, 45, 0.8); 
-            --surface-hover: rgba(61, 57, 55, 0.9);
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --text: #FAF3E0; 
-            --text-secondary: #BBA999; 
-            --success: #68A357; 
-            --error: #D96C6C; 
-            --elevation: 0 8px 16px -4px rgba(0, 0, 0, 0.3); 
-            --elevation-hover: 0 12px 24px -6px rgba(0, 0, 0, 0.4);
-            --transition-fast: 0.2s ease;
-            --transition-normal: 0.3s ease;
-            --transition-slow: 0.5s ease;
-        }
-        
-        /* Light mode variables */
-        [data-theme="light"] {
             --primary: #D96C6C;
             --primary-hover: #b86b6b;
             --primary-gradient: linear-gradient(45deg, #D96C6C 0%, #ca5656 100%);
-            --background: linear-gradient(195deg, #f5f5f5 0%, #e0e0e0 100%);
-            --surface: rgba(255, 255, 255, 0.8);
-            --surface-hover: rgba(245, 245, 245, 0.9);
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.25);
-            --text: #333333;
-            --text-secondary: #666666;
-            --elevation: 0 8px 16px -4px rgba(0, 0, 0, 0.1);
-            --elevation-hover: 0 12px 24px -6px rgba(0, 0, 0, 0.15);
+            --background: linear-gradient(195deg, #191919 0%, #312F2F 100%);
+            --surface: rgba(51, 47, 45, 0.8);
+            --surface-hover: rgba(61, 57, 55, 0.9);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #FAF3E0;
+            --text-secondary: #BBA999;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            margin: 0;
+            background: var(--background);
+            min-height: 100vh;
+            color: var(--text);
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: var(--background);
-            overflow: hidden;
+            gap: 20px;
+            padding: 20px;
+            margin: 0 auto;
         }
 
-        .animation-container {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-
-        .teleport-box {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border: 2px solid rgb(217, 108, 108);
-            border-radius: 8px;
-        }
-
-        .teleport-box.blue {
-            border-color: #FAF3E0;
-        }
-
-        .teleport-box.full {
-            background-color: #FAF3E0;
-            outline: 3px solid #c46f6fb2;
-            outline-offset: 5px;
-            width: 100px;
-            height: 100px;
-        }
-
-        .button-container {
+        .sidebar {
             position: relative;
-            z-index: 1;
+            width: 250px;
+            min-width: 250px;
+            margin-left: 20px;
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
             display: flex;
-            gap: 16px;
-            align-items: center;
+            flex-direction: column;
+            gap: 15px;
+            transition: transform 0.3s ease-in-out;
         }
 
-        #open-btn {
-            padding: 16px 32px;
-            font-size: 18px;
+        .sidebar-collapsed {
+            transform: translateX(-300px);
+            opacity: 0;
+            position: absolute;
+            z-index: 100;
+        }
+
+        .new-chat-btn {
             background: var(--primary-gradient);
             color: white;
+            padding: 12px 20px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            transition: all var(--transition-normal);
-            box-shadow: var(--elevation);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .new-chat-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 60px;
+        }
+
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            background: var(--glass-bg);
+            border-radius: 12px;
             border: 1px solid var(--glass-border);
         }
 
-        #open-btn:hover {
+        .sidebar-btn {
+            flex: 1;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-btn:hover {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .chat-item {
+            padding: 12px 15px;
+            background: var(--glass-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+
+        .chat-item:hover {
+            background: var(--surface-hover);
+        }
+
+        .chat-container {
+            flex: 1;
+            height: calc(100vh - 40px);
+            max-width: 1000px;
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chat-header {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-toggle {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 8px 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .menu-toggle:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .chat-history {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 15px;
+            animation: slideIn 0.3s ease;
+        }
+
+        .user-message {
+            background: var(--primary-gradient);
+            align-self: flex-end;
+        }
+
+        .bot-message {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+        }
+
+        .input-container {
+            padding: 20px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px 20px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--glass-bg);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover {
+            background: var(--surface-hover);
+            color: var(--text);
+        }
+
+        .send-btn {
+            background: var(--primary-gradient);
+            color: white;
+            width: 80px;
+        }
+
+        .send-btn:hover {
             background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--elevation-hover);
             outline: 2px solid #c46f6fb2;
             outline-offset: 2px;
         }
 
-        #open-btn:active {
-            transform: translateY(0);
+        .greeting {
+            text-align: center;
+            margin: auto;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+            font-weight: 600;
         }
-        
-        #theme-toggle {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
+
+        .typing-indicator {
+            display: none;
+            padding: 15px 20px;
             background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: var(--elevation);
-            padding: 0;
-            position: relative;
-            overflow: hidden;
+            border-radius: 15px;
+            width: fit-content;
+            gap: 8px;
         }
-        
-        #theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--elevation-hover);
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
         }
-        
-        #theme-toggle .sun-icon,
-        #theme-toggle .moon-icon {
-            position: absolute;
-            transition: transform var(--transition-normal);
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
-        
-        [data-theme="dark"] #theme-toggle .sun-icon {
-            transform: translateY(0);
-        }
-        
-        [data-theme="dark"] #theme-toggle .moon-icon {
-            transform: translateY(30px);
-        }
-        
-        [data-theme="light"] #theme-toggle .sun-icon {
-            transform: translateY(-30px);
-        }
-        
-        [data-theme="light"] #theme-toggle .moon-icon {
-            transform: translateY(0);
-        }
-        
-        .teleport-box {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            transition: transform var(--transition-slow), opacity var(--transition-normal), background-color var(--transition-normal);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-8px); }
         }
     </style>
 </head>
 <body>
-    <div class="animation-container">
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
-        <div class="teleport-box"></div>
+    <div class="sidebar">
+        <button class="new-chat-btn">+ New Chat</button>
+        <div class="chat-list" id="chatList">
+        </div>
+        <div class="button-container">
+            <button class="btn sidebar-btn">
+                <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn sidebar-btn" id="heartBtn">
+                <i class="fas fa-heart"></i>
+            </button>
+            <button class="btn sidebar-btn" id="lightbulbBtn">
+                <i class="fas fa-lightbulb"></i>
+            </button>
+        </div>
+            <!-- chats will be loaded here -->
+        </div>
     </div>
-    <div class="button-container">
-        <button id="open-btn">Start visionary</button>
-        <button id="theme-toggle" aria-label="Toggle theme">
-            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="5"></circle>
-                <line x1="12" y1="1" x2="12" y2="3"></line>
-                <line x1="12" y1="21" x2="12" y2="23"></line>
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                <line x1="1" y1="12" x2="3" y2="12"></line>
-                <line x1="21" y1="12" x2="23" y2="12"></line>
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-        </button>
+    <div class="chat-container">
+        <div class="chat-header">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+
+        </div>
+        <div class="chat-history">
+            <div class="greeting">How can I help you today?</div>
+            <div class="typing-indicator">
+                <div class="typing-dot"></div>
+                <div class="typing-dot" style="animation-delay: 0.2s"></div>
+                <div class="typing-dot" style="animation-delay: 0.4s"></div>
+            </div>
+        </div>
+        <div class="input-container">
+            <input type="text" class="message-input" placeholder="Type your message...">
+            <button class="btn send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
     </div>
 
+    <script src="https://js.puter.com/v2/"></script>
     <script>
-        // Set initial theme based on user preference
-        document.documentElement.setAttribute('data-theme', 
-            window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            
-        const boxes = document.querySelectorAll('.teleport-box');
-        const themeToggle = document.getElementById('theme-toggle');
+        const chatHistory = document.querySelector('.chat-history');
+        const messageInput = document.querySelector('.message-input');
+        const sendBtn = document.querySelector('.send-btn');
+        const typingIndicator = document.querySelector('.typing-indicator');
+        const newChatBtn = document.querySelector('.new-chat-btn');
+        const chatList = document.getElementById('chatList');
+        let aiMode = 'default'; // Can be 'default', 'emotional', or 'analytical'
 
-        // Theme toggle functionality
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            
-            // Add animation effect during theme change
-            document.body.style.transition = 'background 0.5s ease';
-            setTimeout(() => {
-                document.body.style.transition = '';
-            }, 500);
-        });
+        let currentChatId = null;
+let sidebarCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
 
-        function getRandomPosition() {
-            return {
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight
+// Initialize sidebar state
+function initSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const menuIcon = document.querySelector('#menuToggle i');
+    
+    if(sidebarCollapsed) {
+        sidebar.classList.add('sidebar-collapsed');
+        menuIcon.classList.replace('fa-bars', 'fa-times');
+    }
+}
+
+// Toggle sidebar function
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const menuIcon = document.querySelector('#menuToggle i');
+    
+    sidebar.classList.toggle('sidebar-collapsed');
+    sidebarCollapsed = !sidebarCollapsed;
+    localStorage.setItem('sidebarCollapsed', sidebarCollapsed);
+    
+    menuIcon.classList.toggle('fa-bars');
+    menuIcon.classList.toggle('fa-times');
+}
+
+// Initialize sidebar on load
+document.addEventListener('DOMContentLoaded', initSidebar);
+
+// Add toggle event listener
+document.getElementById('menuToggle').addEventListener('click', toggleSidebar);
+
+        // Chat management functions
+        function createNewChat() {
+            const chatId = Date.now();
+            const chat = {
+                id: chatId,
+                timestamp: new Date().toLocaleString(),
+                messages: []
             };
+            
+            // Clear current messages
+            chatHistory.innerHTML = '<div class="greeting">How can I help you today?</div>';
+            messageInput.value = '';
+            
+            // Save to localStorage and update list
+            localStorage.setItem(`chat_${chatId}`, JSON.stringify(chat));
+            updateChatList();
+            currentChatId = chatId;
         }
 
-        function moveBox(box) {
-            const newPos = getRandomPosition();
-            box.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease';
-            box.style.transform = `translate(${newPos.x}px, ${newPos.y}px) rotate(${Math.random() * 10 - 5}deg)`;
-            box.style.opacity = Math.random() > 0.4 ? 0.7 : 0;
-            box.classList.toggle('blue', Math.random() > 0.5);
-            box.classList.toggle('full', Math.random() > 0.7);
-        }
-
-        function startAnimation() {
-            boxes.forEach((box, index) => {
-                // Stagger the initial animation
-                setTimeout(() => {
-                    moveBox(box);
-                    setInterval(() => moveBox(box), 800 + Math.random() * 1500);
-                }, index * 50);
+        function updateChatList() {
+            chatList.innerHTML = '';
+            const chats = [];
+            
+            for(let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if(key.startsWith('chat_')) {
+                    chats.push(JSON.parse(localStorage.getItem(key)));
+                }
+            }
+            
+            chats.sort((a, b) => b.id - a.id).forEach(chat => {
+                const chatElement = document.createElement('div');
+                chatElement.className = 'chat-item';
+                chatElement.innerHTML = `
+                    <div>${chat.timestamp}</div>
+                    <small>${chat.messages.length} messages</small>
+                `;
+                chatElement.addEventListener('click', () => loadChat(chat.id));
+                chatElement.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    handleChatRightClick(e, chat.id);
+                });
+                chatList.appendChild(chatElement);
             });
         }
 
-        startAnimation();
-
-        // Add hover effect to open button
-        const openBtn = document.getElementById('open-btn');
-        openBtn.addEventListener('mousemove', (e) => {
-            const rect = openBtn.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+        function loadChat(chatId) {
+            const chat = JSON.parse(localStorage.getItem(`chat_${chatId}`));
+            if(!chat) return;
             
-            openBtn.style.background = `radial-gradient(circle at ${x}px ${y}px, var(--primary) 0%, var(--primary-hover) 80%)`;
-        });
-        
-        openBtn.addEventListener('mouseleave', () => {
-            openBtn.style.background = 'var(--primary-gradient)';
+            currentChatId = chatId;
+            chatHistory.innerHTML = chat.messages.map(msg => 
+                `<div class="message ${msg.isUser ? 'user-message' : 'bot-message'}">${msg.text}</div>`
+            ).join('');
+        }
+
+        // Initialize chats
+        updateChatList();
+        if(localStorage.length === 0) createNewChat();
+
+        // Add event listeners for sidebar buttons
+        document.getElementById('heartBtn').addEventListener('click', () => {
+            aiMode = 'emotional';
+            addMessage('AI is now in emotional mode ❤️', false);
         });
 
-        openBtn.addEventListener('click', () => {
-            const width = 360;
-            const height = 800;
-            const left = (screen.width - width) / 2;
-            const top = (screen.height - height) / 2;
+        document.getElementById('lightbulbBtn').addEventListener('click', () => {
+            aiMode = 'analytical';
+            addMessage('AI is now in analytical mode 💡', false);
+        });
 
-            window.open('main.html', 'VisionaryAgent', 
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes`
-            );
+        // Modify the API call to use the selected mode
+        const originalSendHandler = sendBtn.onclick;
+        sendBtn.onclick = () => {
+            const text = messageInput.value.trim();
+            if (text) {
+                addMessage(text, true);
+                messageInput.value = '';
+                typingIndicator.style.display = 'flex';
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                puter.ai.chat(text, { mode: aiMode })
+                    .then(response => {
+                        typingIndicator.style.display = 'none';
+                        addMessage(response, false);
+                    })
+                    .catch(error => {
+                        typingIndicator.style.display = 'none';
+                        addMessage('Sorry, there was an error processing your request', false);
+                        console.error('API Error:', error);
+                    });
+            }
+        };
+
+        function addMessage(text, isUser = true) {
+            const message = document.createElement('div');
+            message.classList.add('message', isUser ? 'user-message' : 'bot-message');
+            message.textContent = text;
+            chatHistory.appendChild(message);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Save message to current chat
+            if(currentChatId) {
+                const chat = JSON.parse(localStorage.getItem(`chat_${currentChatId}`));
+                chat.messages.push({
+                    text: text,
+                    isUser: isUser,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem(`chat_${currentChatId}`, JSON.stringify(chat));
+                updateChatList();
+            }
+        }
+
+        // Right-click deletion handler
+        function handleChatRightClick(e, chatId) {
+            e.preventDefault();
+            if(confirm('Delete this chat permanently?')) {
+                localStorage.removeItem(`chat_${chatId}`);
+                if(currentChatId === chatId) {
+                    createNewChat();
+                }
+                updateChatList();
+            }
+        }
+
+        // Chat creation handler
+        newChatBtn.addEventListener('click', createNewChat);
+
+        // Message sending handler
+        sendBtn.addEventListener('click', () => {
+            const text = messageInput.value.trim();
+            if (text) {
+                addMessage(text, true);
+                messageInput.value = '';
+                
+                // Show typing indicator
+                typingIndicator.style.display = 'flex';
+                chatHistory.scrollTop = chatHistory.scrollHeight;
+
+                // Call Puter AI API
+                puter.ai.chat(text)
+                    .then(response => {
+                        typingIndicator.style.display = 'none';
+                        addMessage(response, false);
+                    })
+                    .catch(error => {
+                        typingIndicator.style.display = 'none';
+                        addMessage('Sorry, there was an error processing your request', false);
+                        console.error('API Error:', error);
+                    });
+            }
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendBtn.click();
+            }
         });
     </script>
 </body>
